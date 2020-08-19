@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Desario Aplicacion de Tareas</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="agregar_tarea">Agregar tarea</string>
+    <string name="borrar_tareas">Borrar tareas</string>
+    <string name="borrar_todo">Borrar todo</string>
+    <string name="ingrese_tarea">Ingrese tarea</string>
+</resources>
