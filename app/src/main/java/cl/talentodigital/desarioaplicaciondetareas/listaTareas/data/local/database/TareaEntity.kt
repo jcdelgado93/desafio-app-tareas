@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "tareas_DB")
+@Entity(tableName = "tareasDB")
 data class TareaEntity(
     @ColumnInfo(name = "tarea") val tarea: String
 ){

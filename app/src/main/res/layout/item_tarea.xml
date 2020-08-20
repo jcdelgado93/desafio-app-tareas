@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/dp15"
+    android:layout_marginTop="@dimen/dp15"
+    android:layout_marginEnd="@dimen/dp15"
     android:elevation="@dimen/dp15"
     app:cardCornerRadius="@dimen/dp25">
 
@@ -12,14 +15,25 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/dp15">
 
+        <ImageView
+            android:id="@+id/iv_simbol"
+            android:layout_width="@dimen/dp25"
+            android:layout_height="@dimen/dp25"
+            android:contentDescription="@string/imagen_de_tarea"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/tv_tarea"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp15"
             android:textSize="@dimen/sp14"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/iv_simbol"
+            app:layout_constraintStart_toEndOf="@id/iv_simbol"
+            app:layout_constraintTop_toTopOf="@id/iv_simbol"
             tools:text="@tools:sample/lorem" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

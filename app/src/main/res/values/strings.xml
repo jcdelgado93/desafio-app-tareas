@@ -6,4 +6,5 @@
     <string name="borrar_tareas">Borrar tareas</string>
     <string name="borrar_todo">Borrar todo</string>
     <string name="ingrese_tarea">Ingrese tarea</string>
+    <string name="imagen_de_tarea">Imagen de tarea</string>
 </resources>

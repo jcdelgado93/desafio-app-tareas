@@ -2,6 +2,7 @@ package cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import cl.talentodigital.desarioaplicaciondetareas.R
@@ -10,7 +11,7 @@ import cl.talentodigital.desarioaplicaciondetareas.listaTareas.data.local.LocalT
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.data.local.TareasMapper
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.TareasRepository
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.TareasUseCase
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.model.Tarea
+import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.model.Tareas
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -29,7 +30,7 @@ class TareasFragment : Fragment(R.layout.fragment_tareas) {
         setupDependencies()
         bindView(view)
         setupRecyclerView()
-        callUseCase()
+        obtenerUseCase()
     }
 
     private fun setupDependencies() {
@@ -48,8 +49,8 @@ class TareasFragment : Fragment(R.layout.fragment_tareas) {
         }
     }
 
-    private fun callUseCase() {
-        compositeDisposable.add(tareasUseCase.guardar(obtenerTarea())
+    private fun obtenerUseCase() {
+        compositeDisposable.add(tareasUseCase.obtener()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -59,22 +60,12 @@ class TareasFragment : Fragment(R.layout.fragment_tareas) {
         )
     }
 
-    private fun handleReults(result: Boolean?) {
-        TODO("Not yet implemented")
+    private fun handleReults(result: Tareas) {
+        tareasAdapter = TareasAdapter(result.listaTareas)
+        binding.rvTareas.adapter = tareasAdapter
     }
 
-    private fun handleError(error: Throwable?) {
-        TODO("Not yet implemented")
-    }
-
-    private fun obtenerTarea(): Tarea {
-        return Tarea(
-            getTextValue(binding.nombreTarea),
-            getTextValue(binding.infoTarea)
-        )
-    }
-
-    private fun getTextValue(textInputEditText: TextInputEditText): String {
-        return textInputEditText.text.toString()
+    private fun handleError(error: Throwable) {
+        Toast.makeText(requireContext(), "Error: {${error.message}}", Toast.LENGTH_SHORT).show()
     }
 }

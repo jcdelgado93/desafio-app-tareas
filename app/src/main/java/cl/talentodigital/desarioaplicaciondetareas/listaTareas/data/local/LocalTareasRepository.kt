@@ -18,7 +18,7 @@ class LocalTareasRepository(
         return database
             .getDB()
             .tareasDao()
-            .obtenerTodo()
+            .getAll()
             .map { list -> mapper.mapRoomToDomain(list) }
     }
 
@@ -26,8 +26,9 @@ class LocalTareasRepository(
         return database
             .getDB()
             .tareasDao()
-            .guardarTarea(mapper.mapDomainToRoom(tarea)).map {
-                it>0
+            .insertTask(mapper.mapDomainToRoom(tarea))
+            .map {
+                it > 0
             }
     }
 }
