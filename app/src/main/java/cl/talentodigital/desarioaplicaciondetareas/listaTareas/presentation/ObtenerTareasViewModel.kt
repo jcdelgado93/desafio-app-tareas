@@ -2,25 +2,25 @@ package cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.TareasUseCase
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.model.Tarea
+import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.ObtenerTareasUseCase
+import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.model.Tareas
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class TareasViewModel(
-    private val tareasUseCase: TareasUseCase
-) : ViewModel() {
+class ObtenerTareasViewModel(
+    private val obtenerTareasUseCase: ObtenerTareasUseCase
+): ViewModel() {
 
-    private val liveData = MutableLiveData<TareasState>()
+    private val liveData = MutableLiveData<ObtenerTareasState>()
     private val compositeDisposable = CompositeDisposable()
 
     fun getLiveData() = liveData
 
-    fun saveTask(tarea: Tarea) {
-        liveData.postValue(TareasState.LoadingState)
-        compositeDisposable.add(tareasUseCase
-            .guardar(tarea)
+    fun obtenerTareas() {
+        liveData.postValue(ObtenerTareasState.LoadingStateObtener)
+        compositeDisposable.add(obtenerTareasUseCase
+            .obtener()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -30,11 +30,11 @@ class TareasViewModel(
         )
     }
 
-    private fun handleResult(result: Tarea) {
-        liveData.postValue(TareasState.Complete(result))
+    private fun handleResult(result: Tareas) {
+        liveData.postValue(ObtenerTareasState.Complete(result))
     }
 
     private fun handleError(error: Throwable) {
-        liveData.postValue(TareasState.Error(error))
+        liveData.postValue(ObtenerTareasState.Error(error))
     }
 }

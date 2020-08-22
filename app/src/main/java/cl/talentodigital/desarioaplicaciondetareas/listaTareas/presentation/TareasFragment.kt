@@ -4,38 +4,73 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import cl.talentodigital.desarioaplicaciondetareas.R
 import cl.talentodigital.desarioaplicaciondetareas.databinding.FragmentTareasBinding
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.data.local.LocalTareasRepository
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.data.local.TareasMapper
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.TareasRepository
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.TareasUseCase
+import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.ObtenerTareasUseCase
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.model.Tareas
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
 class TareasFragment : Fragment(R.layout.fragment_tareas) {
 
     private lateinit var binding: FragmentTareasBinding
     private lateinit var tareasAdapter: TareasAdapter
-    private lateinit var tareasUseCase: TareasUseCase
+    private lateinit var obtenerTareaUseCase: ObtenerTareasUseCase
     private lateinit var repository: TareasRepository
+    private lateinit var obtenerTareasViewModel: ObtenerTareasViewModel
+    private lateinit var obtenerTareasViewModelFactory: ObtenerTareasViewModelFactory
     private val mapper = TareasMapper()
-    private val compositeDisposable = CompositeDisposable()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupDependencies()
+        setupLiveData()
         bindView(view)
         setupRecyclerView()
-        obtenerUseCase()
+        obtenerViewModel()
     }
 
     private fun setupDependencies() {
         repository = LocalTareasRepository(requireContext(), mapper)
-        tareasUseCase = TareasUseCase(repository)
+        obtenerTareaUseCase = ObtenerTareasUseCase(repository)
+        obtenerTareasViewModelFactory = ObtenerTareasViewModelFactory(obtenerTareaUseCase)
+        obtenerTareasViewModel = ViewModelProvider(this, obtenerTareasViewModelFactory)
+            .get(ObtenerTareasViewModel::class.java)
+    }
+
+    private fun setupLiveData() {
+        obtenerTareasViewModel.getLiveData()
+            .observe(
+                this,
+                Observer { state ->
+                    handleState(state)
+                }
+            )
+    }
+
+    private fun handleState(state: ObtenerTareasState?) {
+        when(state) {
+            is ObtenerTareasState.LoadingStateObtener -> mostrarCargando()
+            is ObtenerTareasState.Complete -> state.result?.let { mostrarTareas(it) }
+            is ObtenerTareasState.Error -> state.error?.let { mostrarError(it) }
+        }
+    }
+
+    private fun mostrarCargando() {
+        Toast.makeText(requireContext(), "Cargando...", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun mostrarTareas(result: Tareas) {
+        tareasAdapter = TareasAdapter(result.listaTareas)
+        binding.rvTareas.adapter = tareasAdapter
+    }
+
+    private fun mostrarError(error: Throwable) {
+        Toast.makeText(requireContext(), "Error: {${error.message}", Toast.LENGTH_SHORT).show()
     }
 
     private fun bindView(view: View) {
@@ -49,23 +84,7 @@ class TareasFragment : Fragment(R.layout.fragment_tareas) {
         }
     }
 
-    private fun obtenerUseCase() {
-        compositeDisposable.add(tareasUseCase.obtener()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {result -> handleReults(result)},
-                {error -> handleError(error)}
-            )
-        )
-    }
-
-    private fun handleReults(result: Tareas) {
-        tareasAdapter = TareasAdapter(result.listaTareas)
-        binding.rvTareas.adapter = tareasAdapter
-    }
-
-    private fun handleError(error: Throwable) {
-        Toast.makeText(requireContext(), "Error: {${error.message}}", Toast.LENGTH_SHORT).show()
+    private fun obtenerViewModel() {
+        obtenerTareasViewModel.obtenerTareas()
     }
 }

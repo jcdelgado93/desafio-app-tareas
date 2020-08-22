@@ -2,14 +2,14 @@ package cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.TareasUseCase
+import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.GuardarTareaUseCase
 
-class TareasViewModelFactory(
-    private val tareasUseCase: TareasUseCase
+class GuardarTareasViewModelFactory(
+    private val guardarTareaUseCase: GuardarTareaUseCase
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return modelClass
-            .getConstructor(TareasUseCase::class.java)
-            .newInstance(tareasUseCase)
+            .getConstructor(GuardarTareaUseCase::class.java)
+            .newInstance(guardarTareaUseCase)
     }
 }
