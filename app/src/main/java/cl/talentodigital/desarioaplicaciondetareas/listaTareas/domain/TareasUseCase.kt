@@ -7,4 +7,5 @@ class TareasUseCase(
 ) {
     fun obtener() = repository.obtenerTareas()
     fun guardar(tarea: Tarea) = repository.guardarTarea(tarea)
+    /*fun borrar(tareas: Tarea) = repository.borrarTareas(tareas)*/
 }

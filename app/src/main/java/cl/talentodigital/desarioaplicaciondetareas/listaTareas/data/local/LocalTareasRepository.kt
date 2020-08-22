@@ -31,4 +31,11 @@ class LocalTareasRepository(
                 it > 0
             }
     }
+
+    /*override fun borrarTareas(tareas: Tarea) {
+        database
+            .getDB()
+            .tareasDao()
+            .deleteAll(tareas)
+    }*/
 }

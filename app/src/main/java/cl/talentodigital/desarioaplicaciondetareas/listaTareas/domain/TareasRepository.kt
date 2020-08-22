@@ -7,4 +7,5 @@ import io.reactivex.Single
 interface TareasRepository {
     fun obtenerTareas(): Single<Tareas>
     fun guardarTarea(tarea: Tarea): Single<Boolean>
+    /*fun borrarTareas(tareas: Tarea)*/
 }
