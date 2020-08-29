@@ -1,4 +1,4 @@
-package cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation
+package cl.talentodigital.desarioaplicaciondetareas.listaTareas.ui
 
 import androidx.recyclerview.widget.RecyclerView
 import cl.talentodigital.desarioaplicaciondetareas.databinding.ItemTareaBinding

@@ -1,4 +1,4 @@
-package cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation
+package cl.talentodigital.desarioaplicaciondetareas.listaTareas.ui
 
 import android.app.Dialog
 import android.content.DialogInterface

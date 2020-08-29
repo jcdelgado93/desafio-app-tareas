@@ -1,4 +1,4 @@
-package cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation
+package cl.talentodigital.desarioaplicaciondetareas.listaTareas.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

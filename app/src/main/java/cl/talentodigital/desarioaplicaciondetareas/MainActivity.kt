@@ -13,8 +13,9 @@ import cl.talentodigital.desarioaplicaciondetareas.listaTareas.data.local.Tareas
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.BorrarTareasUseCase
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.TareasRepository
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.GuardarTareaUseCase
+import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.ObtenerTareasUseCase
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.model.Tarea
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation.AgregarTareaDialogFragment
+import cl.talentodigital.desarioaplicaciondetareas.listaTareas.ui.AgregarTareaDialogFragment
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation.TareasState
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation.TareasViewModel
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation.TareasViewModelFactory
@@ -22,10 +23,6 @@ import cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation.Tare
 class MainActivity : AppCompatActivity(), AgregarTareaDialogFragment.AgregarTareaCallBack {
 
     private lateinit var dialogo: AgregarTareaDialogFragment
-    private lateinit var guardarTareaUseCase: GuardarTareaUseCase
-    private lateinit var borrarTareasUseCase: BorrarTareasUseCase
-    private lateinit var repository: TareasRepository
-    private val mapper = TareasMapper()
     private lateinit var tareasViewModel: TareasViewModel
     private lateinit var tareasViewModelFactory: TareasViewModelFactory
 
@@ -68,10 +65,18 @@ class MainActivity : AppCompatActivity(), AgregarTareaDialogFragment.AgregarTare
     }
 
     private fun setupDependencies() {
-        repository = LocalTareasRepository(this, mapper)
-        guardarTareaUseCase = GuardarTareaUseCase(repository)
-        borrarTareasUseCase = BorrarTareasUseCase(repository)
-        tareasViewModelFactory = TareasViewModelFactory(guardarTareaUseCase, borrarTareasUseCase)
+        tareasViewModelFactory = TareasViewModelFactory(
+            GuardarTareaUseCase(
+                LocalTareasRepository(this, TareasMapper())
+            ),
+            BorrarTareasUseCase(
+                LocalTareasRepository(this, TareasMapper())
+            ),
+            ObtenerTareasUseCase(
+                LocalTareasRepository(this, TareasMapper())
+            )
+        )
+
         tareasViewModel = ViewModelProvider(this, tareasViewModelFactory)
             .get(TareasViewModel::class.java)
     }
@@ -86,9 +91,9 @@ class MainActivity : AppCompatActivity(), AgregarTareaDialogFragment.AgregarTare
     }
 
     private fun handleState(state: TareasState?) {
-        when(state) {
+        when (state) {
             is TareasState.LoadingState -> mostrarCargando()
-            is TareasState.Complete -> guardarTarea()
+            is TareasState.TareaGuardada -> guardarTarea()
             is TareasState.Error -> mostrarError()
         }
     }

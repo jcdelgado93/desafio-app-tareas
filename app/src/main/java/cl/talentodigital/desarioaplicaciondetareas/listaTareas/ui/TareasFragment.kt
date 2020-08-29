@@ -1,4 +1,4 @@
-package cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation
+package cl.talentodigital.desarioaplicaciondetareas.listaTareas.ui
 
 import android.os.Bundle
 import android.view.View
@@ -55,7 +55,7 @@ class TareasFragment : Fragment(R.layout.fragment_tareas) {
     private fun handleState(state: ObtenerTareasState?) {
         when(state) {
             is ObtenerTareasState.LoadingStateObtener -> mostrarCargando()
-            is ObtenerTareasState.Complete -> state.result?.let { mostrarTareas(it) }
+            is ObtenerTareasState.Complete -> state.resultObtener?.let { mostrarTareas(it) }
             is ObtenerTareasState.Error -> state.error?.let { mostrarError(it) }
         }
     }
