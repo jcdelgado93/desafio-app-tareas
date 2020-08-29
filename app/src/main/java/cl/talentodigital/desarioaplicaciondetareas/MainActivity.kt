@@ -10,22 +10,24 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.data.local.LocalTareasRepository
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.data.local.TareasMapper
+import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.BorrarTareasUseCase
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.TareasRepository
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.GuardarTareaUseCase
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.model.Tarea
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation.AgregarTareaDialogFragment
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation.GuardarTareasState
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation.GuardarTareasViewModel
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation.GuardarTareasViewModelFactory
+import cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation.TareasState
+import cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation.TareasViewModel
+import cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation.TareasViewModelFactory
 
 class MainActivity : AppCompatActivity(), AgregarTareaDialogFragment.AgregarTareaCallBack {
 
     private lateinit var dialogo: AgregarTareaDialogFragment
     private lateinit var guardarTareaUseCase: GuardarTareaUseCase
+    private lateinit var borrarTareasUseCase: BorrarTareasUseCase
     private lateinit var repository: TareasRepository
     private val mapper = TareasMapper()
-    private lateinit var guardarTareasViewModel: GuardarTareasViewModel
-    private lateinit var guardarTareasViewModelFactory: GuardarTareasViewModelFactory
+    private lateinit var tareasViewModel: TareasViewModel
+    private lateinit var tareasViewModelFactory: TareasViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +37,6 @@ class MainActivity : AppCompatActivity(), AgregarTareaDialogFragment.AgregarTare
 
         setupDependencies()
         setupLiveData()
-        //guardarViewModel()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -63,19 +64,20 @@ class MainActivity : AppCompatActivity(), AgregarTareaDialogFragment.AgregarTare
     }
 
     private fun borrarTodo() {
-        TODO("Not yet implemented")
+        tareasViewModel.borrarTareas()
     }
 
     private fun setupDependencies() {
         repository = LocalTareasRepository(this, mapper)
         guardarTareaUseCase = GuardarTareaUseCase(repository)
-        guardarTareasViewModelFactory = GuardarTareasViewModelFactory(guardarTareaUseCase)
-        guardarTareasViewModel = ViewModelProvider(this, guardarTareasViewModelFactory)
-            .get(GuardarTareasViewModel::class.java)
+        borrarTareasUseCase = BorrarTareasUseCase(repository)
+        tareasViewModelFactory = TareasViewModelFactory(guardarTareaUseCase, borrarTareasUseCase)
+        tareasViewModel = ViewModelProvider(this, tareasViewModelFactory)
+            .get(TareasViewModel::class.java)
     }
 
     private fun setupLiveData() {
-        guardarTareasViewModel.getLiveData().observe(
+        tareasViewModel.getLiveData().observe(
             this,
             Observer { state ->
                 handleState(state)
@@ -83,11 +85,11 @@ class MainActivity : AppCompatActivity(), AgregarTareaDialogFragment.AgregarTare
         )
     }
 
-    private fun handleState(stateGuardar: GuardarTareasState?) {
-        when(stateGuardar) {
-            is GuardarTareasState.LoadingStateGuardar -> mostrarCargando()
-            is GuardarTareasState.Complete -> guardarTarea()
-            is GuardarTareasState.Error -> mostrarError()
+    private fun handleState(state: TareasState?) {
+        when(state) {
+            is TareasState.LoadingState -> mostrarCargando()
+            is TareasState.Complete -> guardarTarea()
+            is TareasState.Error -> mostrarError()
         }
     }
 
@@ -104,10 +106,6 @@ class MainActivity : AppCompatActivity(), AgregarTareaDialogFragment.AgregarTare
     }
 
     override fun procesarTarea(text: String) {
-        guardarTareasViewModel.guardarTarea(Tarea(text))
+        tareasViewModel.guardarTarea(Tarea(text))
     }
-
-    /*private fun guardarViewModel() {
-        tareasViewModel.guardarTarea(obtenerTextoDeLosEditText())
-    }*/
 }

@@ -5,6 +5,7 @@ import cl.talentodigital.desarioaplicaciondetareas.database.ServiceDataBase
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.TareasRepository
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.model.Tarea
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.model.Tareas
+import io.reactivex.Completable
 import io.reactivex.Single
 
 class LocalTareasRepository(
@@ -32,10 +33,10 @@ class LocalTareasRepository(
             }
     }
 
-    /*override fun borrarTareas(tareas: Tarea) {
-        database
+    override fun borrarTareas(): Completable {
+        return database
             .getDB()
             .tareasDao()
-            .deleteAll(tareas)
-    }*/
+            .deleteAll()
+    }
 }
