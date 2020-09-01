@@ -2,9 +2,7 @@ package cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.BorrarTareasUseCase
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.GuardarTareaUseCase
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.ObtenerTareasUseCase
+import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.TareasUseCase
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.model.Tarea
 import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.model.Tareas
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,10 +10,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class TareasViewModel(
-    private val guardarTareaUseCase: GuardarTareaUseCase,
-    private val borrarTareasUseCase: BorrarTareasUseCase,
-    private val obtenerTareasUseCase: ObtenerTareasUseCase
-
+    private val tareasUseCase: TareasUseCase
 ) : ViewModel() {
 
     private val liveData = MutableLiveData<TareasState>()
@@ -25,7 +20,7 @@ class TareasViewModel(
 
     fun guardarTarea(tarea: Tarea) {
         liveData.postValue(TareasState.LoadingState)
-        compositeDisposable.add(guardarTareaUseCase
+        compositeDisposable.add(tareasUseCase
             .guardar(tarea)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -38,7 +33,7 @@ class TareasViewModel(
 
     fun borrarTareas() {
         liveData.postValue(TareasState.LoadingState)
-        compositeDisposable.add(borrarTareasUseCase
+        compositeDisposable.add(tareasUseCase
             .borrar()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -51,7 +46,7 @@ class TareasViewModel(
 
     fun obtenerTareas() {
         liveData.postValue(TareasState.LoadingState)
-        compositeDisposable.add(obtenerTareasUseCase
+        compositeDisposable.add(tareasUseCase
             .obtener()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

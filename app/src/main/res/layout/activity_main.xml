@@ -4,17 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".listaTareas.ui.MainActivity">
 
-    <fragment
-        android:id="@+id/fragment_tareas"
-        android:name="cl.talentodigital.desarioaplicaciondetareas.listaTareas.ui.TareasFragment"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_tareas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout="@layout/fragment_tareas" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

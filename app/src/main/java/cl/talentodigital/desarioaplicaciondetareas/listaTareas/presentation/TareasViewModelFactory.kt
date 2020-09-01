@@ -2,18 +2,14 @@ package cl.talentodigital.desarioaplicaciondetareas.listaTareas.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.BorrarTareasUseCase
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.GuardarTareaUseCase
-import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.ObtenerTareasUseCase
+import cl.talentodigital.desarioaplicaciondetareas.listaTareas.domain.TareasUseCase
 
 class TareasViewModelFactory(
-    private val guardarTareaUseCase: GuardarTareaUseCase,
-    private val borrarTareasUseCase: BorrarTareasUseCase,
-    private val obtenerTareasUseCase: ObtenerTareasUseCase
+    private val tareasUseCase: TareasUseCase
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return modelClass
-            .getConstructor(GuardarTareaUseCase::class.java)
-            .newInstance(guardarTareaUseCase, borrarTareasUseCase, obtenerTareasUseCase)
+            .getConstructor(TareasUseCase::class.java)
+            .newInstance(tareasUseCase)
     }
 }
